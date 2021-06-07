@@ -1,6 +1,10 @@
 # TalariaFileIngestionClient
 File Ingestion Client for Talaria
 
+## Installation
+
+<code> go get -u github.com/atris/TalariaFileIngestionClient </code>
+
 ## Usage
 
 <code> TalariaIngestionClient ingest {flags} {file URL} </code>
