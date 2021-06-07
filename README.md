@@ -1,5 +1,5 @@
-# TalariaIngestionClient
-Ingestion Client for Talaria
+# TalariaFileIngestionClient
+File Ingestion Client for Talaria
 
 ## Usage
 
