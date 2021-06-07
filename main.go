@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "TalariaFileIngestionClient/cmd"
+import "TalariaIngestionClient/cmd"
 
 func main() {
 	cmd.Execute()
