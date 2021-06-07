@@ -1,4 +1,4 @@
-module TalariaIngestionClient
+module TalariaFileIngestionClient
 
 go 1.15
 
