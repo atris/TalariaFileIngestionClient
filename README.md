@@ -3,7 +3,9 @@ File Ingestion Client for Talaria
 
 ## Installation
 
-<code> go get -u github.com/atris/TalariaFileIngestionClient </code>
+<code> git clone https://github.com/atris/TalariaFileIngestionClient  </code>
+<code> cd TalariaFileIngestionClient </code>
+<code> go install TalariaFileIngestionClient </code>
 
 ## Usage
 
