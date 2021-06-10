@@ -11,7 +11,7 @@ File Ingestion Client for Talaria
 
 ## Usage
 
-<code> TalariaIngestionClient ingest {flags} {file URL} </code>
+<code> TalariaFileIngestionClient ingest {flags} {file URL} </code>
   
 Flags:
 
