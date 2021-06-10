@@ -38,6 +38,7 @@ type inputDetails struct {
 	timeOut     time.Duration
 	maxConcurrency    int
 	errorPercentage   int
+	useManualParquet  bool
 	fileLocation      string
 }
 
