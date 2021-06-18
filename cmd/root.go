@@ -39,7 +39,7 @@ type inputDetails struct {
 	maxConcurrency    int
 	errorPercentage   int
 	useManualParquet  bool
-	fileLocation      string
+	fileLocations     []string
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

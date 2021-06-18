@@ -24,7 +24,10 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
+	"sync"
 )
+
+var wg sync.WaitGroup
 
 // ingestCmd represents the ingest command
 var ingestCmd = &cobra.Command{
@@ -36,28 +39,15 @@ var ingestCmd = &cobra.Command{
 		if err != nil {
 			exitGracefully(err)
 		}
-		// Validating the file entered
-		if _, err := checkIfValidFile(inputDetails.fileLocation); err != nil {
-			exitGracefully(err)
+
+		fileLocationsLen := len(inputDetails.fileLocations)
+
+		for i := 0; i < fileLocationsLen; i++ {
+			wg.Add(1)
+			go executeIngestProcess(inputDetails.fileLocations[i], inputDetails)
 		}
 
-		fmt.Println("ingest called with arguments", inputDetails)
-
-		c, err := New(inputDetails.talariaURL, &inputDetails.timeOut, &inputDetails.maxConcurrency, &inputDetails.errorPercentage)
-
-		if err != nil {
-			exitGracefully(err)
-		}
-
-		if inputDetails.useManualParquet {
-			err = ingestParquetInManualOperation(c, inputDetails.fileLocation)
-		} else {
-			err = c.IngestURL(context.Background(), inputDetails.fileLocation)
-		}
-
-		if err != nil {
-			exitGracefully(err)
-		}
+		wg.Wait()
 	},
 }
 
@@ -80,12 +70,16 @@ func getFileData(cmd *cobra.Command, args []string) (inputDetails, error) {
 
 	flag.Parse() // This will parse all the arguments from the terminal
 
-	fileLocation := args[0]
+	var fileLocations [] string
+
+	for i := 0; i < len(args); i++ {
+		fileLocations = append(fileLocations, args[i])
+	}
 
 	// If we get to this endpoint, our program arguments are validated
 	// We return the corresponding struct instance with all the required data
 	return inputDetails{talariaURL, timeOut, maxConcurrency,
-		errorPercentage, useManualParquet, fileLocation}, nil
+		errorPercentage, useManualParquet, fileLocations}, nil
 }
 
 func exitGracefully(err error) {
@@ -102,6 +96,33 @@ func checkIfValidFile(filename string) (bool, error) {
 
 	// If we get to this point, it means this is a valid file
 	return true, nil
+}
+
+func executeIngestProcess(fileLocation string,  inputDetails inputDetails) {
+	defer wg.Done()
+
+	// Validating the file entered
+	if _, err := checkIfValidFile(fileLocation); err != nil {
+		exitGracefully(err)
+	}
+
+	fmt.Println("ingest called with arguments", fileLocation)
+
+	c, err := New(inputDetails.talariaURL, &inputDetails.timeOut, &inputDetails.maxConcurrency, &inputDetails.errorPercentage)
+
+	if err != nil {
+		exitGracefully(err)
+	}
+
+	if inputDetails.useManualParquet {
+		err = ingestParquetInManualOperation(c, fileLocation)
+	} else {
+		err = c.IngestURL(context.Background(), fileLocation)
+	}
+
+	if err != nil {
+		exitGracefully(err)
+	}
 }
 
 func ingestParquetInManualOperation(c *client.Client, filename string) (error) {
