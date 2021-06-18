@@ -11,7 +11,9 @@ File Ingestion Client for Talaria
 
 ## Usage
 
-<code> TalariaFileIngestionClient ingest {flags} {file URL} </code>
+<code> TalariaFileIngestionClient ingest {flags} {file URLs} </code>
+
+NOTE: For each file URL, TalariaFileIngestionClient will fire a separate thread on the client machine. Please ensure that you specify a file count which does not cause your CPU cores to be exceeded.
   
 Flags:
 
